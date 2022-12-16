@@ -29,7 +29,7 @@ class EventService {
         try {
             const res = await api.get('api/events/' + eventId)
             logger.log('[Get event by event Id]', res.data)
-            AppState.activeEvent = res.data
+            AppState.activeEvent = new Event(res.data)
         } catch (error) {
             Pop.error(error.message)
             logger.error(error)
