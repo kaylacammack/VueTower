@@ -19,7 +19,7 @@ class EventService {
         const event = await this.getEventByEventId(eventId)
         if (!event) throw new BadRequest (`No event exists by event Id: ${eventId}`)
         if (event.creatorId != userId) throw new Forbidden('Not your event to modify')
-        if (event.isCanceled = true) throw new Forbidden ('Cannot modify a cancelled event')
+        if (event.isCanceled) throw new Forbidden ('Cannot modify a cancelled event')
 
         event.name = eventData.name ? eventData.name : event.name
         event.description = eventData.description ? eventData.description : event.description
