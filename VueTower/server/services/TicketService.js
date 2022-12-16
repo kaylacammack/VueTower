@@ -34,7 +34,7 @@ class TicketService {
             event.capacity += 1
             await event.save()
         }
-        return `ticket to ${event.name} deleted`
+        return `ticket deleted`
         
 
     }
