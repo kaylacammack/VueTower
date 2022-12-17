@@ -26,7 +26,8 @@
                                     <h6>{{ event.capacity }}</h6><span>spots left</span>
                                 </div>
                                 <div>
-                                    <button v-if="event.isCancelled" class="btn btn-outline-danger" disabled>Event is
+                                    <div>{{ event }}</div>
+                                    <button v-if="event.isCanceled" class="btn btn-outline-danger" disabled>Event is
                                         cancelled</button>
                                     <button v-else-if="account.id && (ticketSold === false)" @click="createTicket()"
                                         class="btn btn-warning">Attend<i class="mdi mdi-account-plus"></i></button>
