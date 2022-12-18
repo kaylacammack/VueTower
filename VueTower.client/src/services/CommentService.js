@@ -6,6 +6,7 @@ import { api } from "./AxiosService.js"
 class CommentService {
     async createComment(body) {
         try {
+            logger.log('create comment body', body)
             const res = await api.post('api/comments', body)
             logger.log('[Create comment]', res.data)
             AppState.comments.unshift(res.data)
@@ -16,11 +17,11 @@ class CommentService {
     }
     async deleteComment(commentId) {
         try {
-            const res = await.delete('api/comments/' + commentId)
+            const res = await api.delete('api/comments/' + commentId)
             logger.log('[Deleting comment]', res.data)
-            let index = AppState.comments.findIndex(c => c.commentId === commentId)
+            let index = AppState.comments.findIndex(c => c.id === commentId)
             if(index >= 0){
-                AppState.splice(index, 1)
+                AppState.comments.splice(index, 1)
             }
         } catch (error) {
             Pop.error(error.message)

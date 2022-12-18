@@ -40,7 +40,7 @@ class EventService {
         try {
             const res = await api.get('api/events/' + eventId + '/tickets')
             logger.log('[Get event tickets]', res.data)
-            AppState.events = res.data
+            AppState.tickets = res.data
         } catch (error) {
             Pop.error(error.message)
             logger.error(error)
@@ -68,9 +68,8 @@ class EventService {
     }
     async cancelEvent(eventData) {
         try {
-            const res = await api.put('api/events/' + eventData.id, eventData)
-            logger.log('[Cancel event]', res.data)
-            AppState.events = new Event(res.data)
+            await api.delete('api/events/' + eventData.eventId, eventData)
+            AppState.activeEvent.isCanceled = true
         } catch (error) {
             Pop.error(error.message)
             logger.error(error)

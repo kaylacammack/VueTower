@@ -27,10 +27,10 @@
                                     <span>spots left</span>
                                 </div>
                                 <div>
-                                    <button v-if="event.isCanceled && event.creatorId" class="btn btn-outline-danger"
+                                    <button v-if="event.isCanceled == true" class="btn btn-outline-danger"
                                         disabled>Event is
                                         cancelled</button>
-                                    <button v-else-if="event.isCanceled == false && event.creatorId"
+                                    <button v-else-if="event.isCanceled == false && event.creatorId === account.id"
                                         @click="cancelEvent()" class="btn btn-danger">Cancel
                                         Event</button>
                                 </div>
@@ -50,17 +50,39 @@
     </div>
     <!--SECTION See who is attending-->
     <div class="container-fluid">
+        <div class="row g-0">
+            <div v-for="t in tickets" class="col">
+                <img :src="t.profile.picture" :title="t.profile.name" width="40" class="rounded" />
+            </div>
+        </div>
+    </div>
+    <!--SECTION Comments-->
+    <div class="container-fluid" style="margin-top: 10px">
         <div class="row">
-
+            <div class="col-8">
+                <form @submit.prevent="createComment()">
+                    <textarea v-model="editable.body" id="comment" placeholder="Talk about the event" cols="30"
+                        rows="10"></textarea>
+                    <button class="btn btn-success" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+        <!--TODO fix style for comments-->
+        <div v-for="comment in comments">
+            <h5>{{ comment.creator.name }}</h5>
+            <img :src="comment.creator.picture" :title="comment.creator.name" width="40" class="rounded" />
+            <p>{{ comment.body }}</p>
+            <button class="btn btn-danger" @click="deleteComment(comment.id)">Delete Comment<i
+                    class="mdi mdi-trash-can"></i></button>
         </div>
     </div>
 </template>
 
 <script>
-import { onMounted, computed } from "vue";
+import { onMounted, computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { AppState } from "../AppState.js";
-import { Account } from "../models/Account";
+import { commentService } from "../services/CommentService.js";
 import { eventService } from "../services/EventService.js";
 import { ticketService } from "../services/TicketService.js";
 import { logger } from "../utils/Logger";
@@ -68,7 +90,7 @@ import Pop from "../utils/Pop.js";
 
 export default {
     setup() {
-
+        const editable = ref({})
         const route = useRoute();
         async function getEventByEventId() {
             try {
@@ -86,21 +108,42 @@ export default {
                 logger.error(error);
             }
         }
+        async function getEventTickets() {
+            try {
+                await eventService.getEventTickets(route.params.eventId)
+            } catch (error) {
+                Pop.error(error.message);
+                logger.error(error);
+            }
+        }
+        async function getEventComments() {
+            try {
+                await eventService.getEventComments(route.params.eventId)
+            } catch (error) {
+                Pop.error(error.message);
+                logger.error(error);
+            }
+        }
         onMounted(() => {
             getEventByEventId();
             getMyTickets();
+            getEventTickets();
+            getEventComments();
         })
         return {
+            editable,
             event: computed(() => AppState.activeEvent),
             account: computed(() => AppState.account),
-            tickets: computed(() => AppState.myTickets),
+            tickets: computed(() => AppState.tickets),
             foundTicket: computed(() => AppState.myTickets.find(ticket => ticket.eventId == AppState.activeEvent.eventId)),
+            comments: computed(() => AppState.comments),
 
             async createTicket() {
                 try {
                     await ticketService.createTicket({
                         eventId: route.params.eventId
                     });
+                    getEventTickets()
                 } catch (error) {
                     Pop.error(error.message)
                     logger.error(error);
@@ -111,6 +154,7 @@ export default {
                     if (await Pop.confirm()) {
                         await ticketService.removeTicket(ticketId);
                     };
+                    getEventTickets()
                 } catch (error) {
                     Pop.error(error.message);
                     logger.error(error);
@@ -119,8 +163,26 @@ export default {
             async cancelEvent() {
                 try {
                     if (await Pop.confirm()) {
-                        await eventService.cancelEvent();
+                        this.event.isCanceled = true
+                        await eventService.cancelEvent(this.event);
                     }
+                } catch (error) {
+                    Pop.error(error);
+                    logger.error(error);
+                }
+            },
+            async createComment() {
+                try {
+                    editable.value.eventId = route.params.eventId
+                    await commentService.createComment(editable.value)
+                } catch (error) {
+                    Pop.error(error);
+                    logger.error(error);
+                }
+            },
+            async deleteComment(commentId) {
+                try {
+                    await commentService.deleteComment(commentId)
                 } catch (error) {
                     Pop.error(error);
                     logger.error(error);

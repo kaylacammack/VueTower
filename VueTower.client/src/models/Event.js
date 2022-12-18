@@ -1,7 +1,7 @@
 export class Event {
     constructor(data) {
         this.eventId = data.id
-        this.creatorId = this.creatorId
+        this.creatorId = data.creatorId
         this.name = data.name
         this.description = data.description
         this.coverImg = data.coverImg
