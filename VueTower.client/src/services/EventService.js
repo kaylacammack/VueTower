@@ -9,7 +9,8 @@ class EventService {
         try {
             const res = await api.post('api/events', body)
             logger.log('[Create Event]', res.data)
-            AppState.events.unshift(res.data)
+            AppState.activeEvent = new Event(res.data)
+            return res.data
         } catch (error) {
             Pop.error(error.message)
             logger.error(error)

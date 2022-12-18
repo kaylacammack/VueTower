@@ -1,20 +1,23 @@
 <template>
-
+    <!--SECTION Event Filters-->
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-12 bg-primary p-2 rounded d-flex justify-content-between">
-                <button @click="filterBy = ''" class="btn btn-warning fw-bold">All</button>
-                <button @click="filterBy = 'concert'" class="btn btn-warning fw-bold">Concert</button>
-                <button @click="filterBy = 'convention'" class="btn btn-warning fw-bold">Convention</button>
-                <button @click="filterBy = 'sport'" class="btn btn-warning fw-bold">Sport</button>
-                <button @click="filterBy = 'digital'" class="btn btn-warning fw-bold">Digital</button>
+            <div class="col-12">
+                <div class="col-12 bg-primary p-2 rounded d-flex justify-content-between">
+                    <button @click="filterBy = ''" class="btn btn-warning fw-bold">All</button>
+                    <button @click="filterBy = 'concert'" class="btn btn-warning fw-bold">Concert</button>
+                    <button @click="filterBy = 'convention'" class="btn btn-warning fw-bold">Convention</button>
+                    <button @click="filterBy = 'sport'" class="btn btn-warning fw-bold">Sport</button>
+                    <button @click="filterBy = 'digital'" class="btn btn-warning fw-bold">Digital</button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div v-for="e in events" class="col-12 col-md-3 mb-3 p-4">
-                <EventCard :event="e" />
+        <!--SECTION Event Cards-->
+        <div class="container-fluid">
+            <div class="row">
+                <div v-for="e in events" class="col-12 col-md-3 mb-3 p-4">
+                    <EventCard :event="e" />
+                </div>
             </div>
         </div>
     </div>

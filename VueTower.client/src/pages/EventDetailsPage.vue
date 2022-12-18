@@ -23,17 +23,23 @@
                             </div>
                             <div class="col-12 d-flex justify-content-between">
                                 <div>
-                                    <h6>{{ event.capacity }}</h6><span>spots left</span>
+                                    <h6 :class="`${event.capacity === 0 ? 'red' : 'green'}`">{{ event.capacity }}</h6>
+                                    <span>spots left</span>
                                 </div>
                                 <div>
-                                    <div>{{ event }}</div>
-                                    <button v-if="event.isCanceled" class="btn btn-outline-danger" disabled>Event is
+                                    <button v-if="event.isCanceled && event.creatorId" class="btn btn-outline-danger"
+                                        disabled>Event is
                                         cancelled</button>
-                                    <button v-else-if="account.id && (ticketSold === false)" @click="createTicket()"
+                                    <button v-else-if="event.isCanceled == false && event.creatorId"
+                                        @click="cancelEvent()" class="btn btn-danger">Cancel
+                                        Event</button>
+                                </div>
+                                <div>
+                                    <button v-if="account.id && !foundTicket" @click="createTicket()"
                                         class="btn btn-warning">Attend<i class="mdi mdi-account-plus"></i></button>
-                                    <button v-else-if="account.id && (ticketSold === true)" @click="removeTicket()"
-                                        class="btn btn-outline-danger">Not attending<i
-                                            class="mdi mdi-account-minus"></i></button>
+                                    <button v-else-if="account.id" @click="removeTicket(foundTicket.ticketId)"
+                                        class="btn btn-outline-danger">Not
+                                        attending<i class="mdi mdi-account-minus"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +70,6 @@ export default {
     setup() {
 
         const route = useRoute();
-        let ticketSold = false;
         async function getEventByEventId() {
             try {
                 await eventService.getEventByEventId(route.params.eventId);
@@ -73,21 +78,29 @@ export default {
                 logger.error(error);
             }
         }
+        async function getMyTickets() {
+            try {
+                await ticketService.getMyTickets(route.params.eventId);
+            } catch (error) {
+                Pop.error(error.message);
+                logger.error(error);
+            }
+        }
         onMounted(() => {
             getEventByEventId();
+            getMyTickets();
         })
         return {
             event: computed(() => AppState.activeEvent),
             account: computed(() => AppState.account),
-            tickets: computed(() => AppState.tickets),
+            tickets: computed(() => AppState.myTickets),
+            foundTicket: computed(() => AppState.myTickets.find(ticket => ticket.eventId == AppState.activeEvent.eventId)),
 
-            // haveTicket: computed(() => AppState.tickets.find(t => t.ticketId == AppState.myTickets.id)),
             async createTicket() {
                 try {
                     await ticketService.createTicket({
                         eventId: route.params.eventId
                     });
-                    ticketSold = true;
                 } catch (error) {
                     Pop.error(error.message)
                     logger.error(error);
@@ -97,9 +110,19 @@ export default {
                 try {
                     if (await Pop.confirm()) {
                         await ticketService.removeTicket(ticketId);
-                    }
+                    };
                 } catch (error) {
                     Pop.error(error.message);
+                    logger.error(error);
+                }
+            },
+            async cancelEvent() {
+                try {
+                    if (await Pop.confirm()) {
+                        await eventService.cancelEvent();
+                    }
+                } catch (error) {
+                    Pop.error(error);
                     logger.error(error);
                 }
             }
@@ -109,5 +132,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.red {
+    color: red
+}
 
+.green {
+    color: rgb(71, 243, 71)
+}
 </style>

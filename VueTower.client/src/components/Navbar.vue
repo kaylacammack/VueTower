@@ -12,11 +12,18 @@
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav me-auto">
                 <li>
-                    <router-link :to="{ name: 'About' }" class="btn text-success lighten-30 selectable text-uppercase">
-                        About
+                    <router-link :to="{ name: 'Account' }"
+                        class="btn text-success lighten-30 selectable text-uppercase">
+                        Account
                     </router-link>
                 </li>
+
+                <li>
+                    <button class="btn text-success lighten-30 selectable text-uppercase" data-bs-toggle="modal"
+                        data-bs-target="#CreateEvent">Create Event</button>
+                </li>
             </ul>
+
             <!-- LOGIN COMPONENT HERE -->
             <Login />
         </div>

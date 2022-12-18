@@ -11,10 +11,8 @@ class TicketService {
         try {
             const res = await api.post('api/tickets', body)
             logger.log('[Create ticket]', res.data)
-            AppState.activeEvent = new Event(res.data)
-            // AppState.tickets.push(res.data)
-            // AppState.myTickets.push(res.data)
-            // AppState.activeEvent.capacity--
+            AppState.myTickets = [res.data].map(ticket => new Ticket(ticket))
+            AppState.activeEvent.capacity--
         } catch (error) {
             Pop.error(error.message)
             logger.error(error)
@@ -24,7 +22,7 @@ class TicketService {
         try {
             const res = await api.get('account/tickets')
             logger.log('[Get my tickets]', res.data)
-            AppState.myTickets = res.data
+            AppState.myTickets = res.data.map(ticket => new Ticket(ticket))
         } catch (error) {
             Pop.error(error.message)
             logger.error(error)
@@ -33,17 +31,9 @@ class TicketService {
     async removeTicket(ticketId) {
         try {
             const res = await api.delete('api/tickets/' + ticketId)
-            logger.log('[Deleting ticket]', res.data)
-            // let ticketIndex = AppState.tickets.findIndex(t => t.ticketId === ticketId)
-            // if (ticketIndex >= 0){
-            //     AppState.splice(ticketIndex, 1)
-            // }
-            // let myTicketIndex = AppState.myTickets.findIndex(t => t.ticketId === ticketId)
-            // if (myTicketIndex >= 0){
-            //     AppState.splice(myTicketIndex, 1)
-            // }
-            // AppState.tickets = new Ticket
-            
+            logger.log('[Deleting ticket]', res)
+            AppState.myTickets = AppState.myTickets.filter(ticket => ticket.ticketId !== ticketId)
+            AppState.activeEvent.capacity++
         } catch (error) {
             Pop.error(error.message)
             logger.error(error)
