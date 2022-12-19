@@ -2,7 +2,7 @@
     <header>
         <Navbar />
     </header>
-    <main>
+    <main class="bg-dark">
         <router-view />
     </main>
     <CreateEventFormModal />

@@ -1,14 +1,19 @@
 <template>
     <!--SECTION Event Filters-->
-    <div class="container">
-        <div class="row justify-content-center">
+    <div class="container-fluid">
+        <div class="row justify-content-center sticky-top">
             <div class="col-12">
-                <div class="col-12 bg-primary p-2 rounded d-flex justify-content-between">
-                    <button @click="filterBy = ''" class="btn btn-warning fw-bold">All</button>
-                    <button @click="filterBy = 'concert'" class="btn btn-warning fw-bold">Concert</button>
-                    <button @click="filterBy = 'convention'" class="btn btn-warning fw-bold">Convention</button>
-                    <button @click="filterBy = 'sport'" class="btn btn-warning fw-bold">Sport</button>
-                    <button @click="filterBy = 'digital'" class="btn btn-warning fw-bold">Digital</button>
+                <div class="col-12 sort p-2 rounded d-flex justify-content-between">
+                    <button @click="filterBy = ''"
+                        class="btn text-success lighten-30 selectable text-uppercase">All</button>
+                    <button @click="filterBy = 'concert'"
+                        class="btn text-success lighten-30 selectable text-uppercase">Concert</button>
+                    <button @click="filterBy = 'convention'"
+                        class="btn text-success lighten-30 selectable text-uppercase">Convention</button>
+                    <button @click="filterBy = 'sport'"
+                        class="btn text-success lighten-30 selectable text-uppercase">Sport</button>
+                    <button @click="filterBy = 'digital'"
+                        class="btn text-success lighten-30 selectable text-uppercase">Digital</button>
                 </div>
             </div>
         </div>
@@ -63,5 +68,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+.sort {
+    background-color: #474C61;
+}
 </style>

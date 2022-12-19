@@ -1,7 +1,7 @@
 <template>
     <!-- SECTION Event Details -->
     <div class="container-fluid">
-        <div v-if="event" class="card mb-3">
+        <div v-if="event" class="card mb-3 text-dark">
             <div class=" row g-0">
                 <div class="col-md-4">
                     <img :src="event.coverImg" class="img-fluid rounded-start" alt="..." />
@@ -50,7 +50,8 @@
     </div>
     <!--SECTION See who is attending-->
     <div class="container-fluid">
-        <div class="row g-0">
+        <h3 class="text-light">See who's attending:</h3>
+        <div class="row g-0 mb-5">
             <div v-for="t in tickets" class="col">
                 <img :src="t.profile.picture" :title="t.profile.name" width="40" class="rounded" />
             </div>
@@ -61,8 +62,8 @@
         <div class="row">
             <div class="col-8">
                 <form @submit.prevent="createComment()">
-                    <textarea v-model="editable.body" id="comment" placeholder="Talk about the event" cols="30"
-                        rows="10"></textarea>
+                    <textarea v-model="editable.body" class="form-floating mb-3 elevation-5 text-dark" id="comment"
+                        placeholder="Talk about the event" cols="30" rows="10"></textarea>
                     <button class="btn btn-success" type="submit">Submit</button>
                 </form>
             </div>
@@ -126,7 +127,7 @@ export default {
         }
         onMounted(() => {
             getEventByEventId();
-            getMyTickets();
+            // getMyTickets();
             getEventTickets();
             getEventComments();
         })
