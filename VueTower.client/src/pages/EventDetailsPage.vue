@@ -60,21 +60,35 @@
     <!--SECTION Comments-->
     <div class="container-fluid" style="margin-top: 10px">
         <div class="row">
-            <div class="col-8">
+            <div class="col-12">
                 <form @submit.prevent="createComment()">
                     <textarea v-model="editable.body" class="form-floating mb-3 elevation-5 text-dark" id="comment"
-                        placeholder="Talk about the event" cols="30" rows="10"></textarea>
-                    <button class="btn btn-success" type="submit">Submit</button>
+                        placeholder="Talk about the event" cols="71" rows="5"></textarea>
+                    <div class="col-8 ms-5">
+                        <button class="btn btn-success" type="submit">Submit</button>
+                    </div>
                 </form>
             </div>
         </div>
         <!--TODO fix style for comments-->
-        <div v-for="comment in comments">
-            <h5>{{ comment.creator.name }}</h5>
-            <img :src="comment.creator.picture" :title="comment.creator.name" width="40" class="rounded" />
-            <p>{{ comment.body }}</p>
-            <button class="btn btn-danger" @click="deleteComment(comment.id)">Delete Comment<i
-                    class="mdi mdi-trash-can"></i></button>
+        <div v-for="comment in comments" class="card text-dark mb-3">
+            <div class="row">
+                <div class="col-8">
+                    <h5>{{ comment.creator.name }}</h5>
+                    <img :src="comment.creator.picture" :title="comment.creator.name" width="40" class="rounded" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <p>{{ comment.body }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                    <button class="btn btn-danger" @click="deleteComment(comment.id)">Delete Comment<i
+                            class="mdi mdi-trash-can"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
